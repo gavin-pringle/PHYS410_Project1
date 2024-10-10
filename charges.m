@@ -78,5 +78,5 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
     end
 
     % Compute equivalence classes
-     
+    v_ec = [1 2 3 4 5]; % DELETE ME 
 end
