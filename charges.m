@@ -28,17 +28,21 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
     % Number of charges 
     nc = height(r0);
 
-    % Array for storing potential at each time step
-    v = zeros(1, nt);
-
     % Intialize array for locations of charges throughout all timesteps
     r = zeros(nc, 3, nt);
     r(:,:,1) = r0; r(:,:,2) = r0; % No initial velocity
 
-    % Compute for all time steps following the first two which are provided
-    for n = 3:nt
-        % Compute the next position of each charge at the current time step
+    % Array for storing the potential at each time step
+    v = zeros(1, nt);
+
+    % Compute for all time steps
+    for n = 1:nt
+        % Compute the position of each charge at the current time step
         for i = 1:nc
+            % We already know all positions at the first two time steps
+            if n == 1 || n == 2
+                continue
+            end
 
             % Compute electrostatic forces on the current charge 
             es_disp = [0 0 0];
@@ -56,19 +60,19 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
             two_ts_disp = (gamma/(2 * dt) - 1/(dt^2)) * r(i,:,n-2);
 
             % Combining all computed displacements prior to normalization
-            disp_before_norm = (two_ts_disp + one_ts_disp - es_disp) / ...
+            pos_before_norm = (two_ts_disp + one_ts_disp - es_disp) / ...
                                (1 / dt^2 - gamma/(2 * dt));
 
             % Normalize the position
-            disp_norm = disp_before_norm / (norm(disp_before_norm));
+            pos_norm = pos_before_norm / (norm(pos_before_norm));
             % Add to r matrix 
-            r(i,:,n) = disp_norm;
+            r(i,:,n) = pos_norm;
         end
 
         % Compute potential at the current time step
         for i = 2:nc
             for j = 1:i-1
-                
+                v(n) = v(n) + 1/(norm(r(j,:,n) - r(i,:,n)));
             end
         end 
     end
