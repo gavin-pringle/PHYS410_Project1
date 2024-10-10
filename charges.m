@@ -29,14 +29,14 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
     nc = height(r0);
 
     % Array for storing potential at each time step
-    v = zeros(nt, 1);
+    v = zeros(1, nt);
 
     % Intialize array for locations of charges throughout all timesteps
     r = zeros(nc, 3, nt);
     r(:,:,1) = r0; r(:,:,2) = r0; % No initial velocity
 
-    % Compute for all time steps 
-    for n = 1:nt
+    % Compute for all time steps following the first two which are provided
+    for n = 3:nt
         % Compute the next position of each charge at the current time step
         for i = 1:nc
 
@@ -46,17 +46,33 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
                 if j == i 
                     continue
                 end
-
+                es_disp = es_disp + (r(j,:,n-1) - r(i,:,n-1)) / ...
+                          norm(r(j,:,n-1) - r(i,:,n-1))^3;
             end
+
+            % Displacement term depending on location of the charge from 1 ts ago
+            one_ts_disp = (2 / dt^2) * r(i,:,n-1);
+            % Displacement term depending on location of the charge from 2 ts ago
+            two_ts_disp = (gamma/(2 * dt) - 1/(dt^2)) * r(i,:,n-2);
+
+            % Combining all computed displacements prior to normalization
+            disp_before_norm = (two_ts_disp + one_ts_disp - es_disp) / ...
+                               (1 / dt^2 - gamma/(2 * dt));
+
+            % Normalize the position
+            disp_norm = disp_before_norm / (norm(disp_before_norm));
+            % Add to r matrix 
+            r(i,:,n) = disp_norm;
         end
 
         % Compute potential at the current time step
-        for i = 1:nc
-            for j = 1:nc
-
+        for i = 2:nc
+            for j = 1:i-1
+                
             end
         end 
     end
 
+    % Compute equivalence classes
      
 end
