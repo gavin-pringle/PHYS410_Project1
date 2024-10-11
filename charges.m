@@ -93,21 +93,28 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
     % The number of equivalence classes is the number of nonzero entries 
     v_ec = zeros(1, nc);
 
-    % Count number of rows that are the same for each index
-    rows_already_matched = zeros(1, nc);
+    % Array of flags for if each row has been sorted into an equivalence class
+    rows_in_ec = zeros(1, nc);
+
     for i = 1:nc
-        if rows_already_matched(i) == 1
+        if rows_in_ec(i) == 1
             continue
         end
+
+        % If not already matched, create a new equivalence class
+        v_ec(i) = v_ec(i) + 1;
+        rows_in_ec(i) = 1;
+
         for j = 1:nc
+            if j == i || rows_in_ec(j) == 1
+                continue
+            end
             % Check if rows are the same 
             if all(abs(dij_sorted(j,:) - dij_sorted(i,:)) < epsec)
                 v_ec(i) = v_ec(i) + 1;
-                rows_already_matched(j) = 1;
+                rows_in_ec(j) = 1;
             end 
         end
-        % The row has been checked so no need to check it again
-        rows_already_matched(i) = 1;
     end
 
     % Remove zero entries and sort in descending order

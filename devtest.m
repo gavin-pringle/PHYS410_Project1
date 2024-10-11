@@ -8,11 +8,13 @@ for i = 1:nc
     r0(i,:) = r0(i,:)/(norm(r0(i,:)));
 end
 
-tmax = 20;
-gamma = 1;
-epsec = 1.0e-4;
-level = 8;
+tmax = 1000;
+gamma = 3;
+epsec = 1.0e-2;
+level = 10;
 
 [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec);
 
-charges_plot(t, r, false)
+plot(t,v);
+
+%charges_plot(t, r, false)
