@@ -78,5 +78,40 @@ function [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec)
     end
 
     % Compute equivalence classes
-    v_ec = [1 2 3 4 5]; % DELETE ME 
+
+    % Compute dij matrix
+    dij = zeros(nc); 
+    for i = 1:nc
+        for j = 1:nc
+            dij(i, j) = norm(r(j,:,nt) - r(i,:,nt));
+        end
+    end
+    % Sort each row of matrix to be in ascending order 
+    dij_sorted = sort(dij, 2);
+
+    % Vector for storing the number of charges in each equivalence class.
+    % The number of equivalence classes is the number of nonzero entries 
+    v_ec = zeros(1, nc);
+
+    % Count number of rows that are the same for each index
+    rows_already_matched = zeros(1, nc);
+    for i = 1:nc
+        if rows_already_matched(i) == 1
+            continue
+        end
+        for j = 1:nc
+            % Check if rows are the same 
+            if all(abs(dij_sorted(j,:) - dij_sorted(i,:)) < epsec)
+                v_ec(i) = v_ec(i) + 1;
+                rows_already_matched(j) = 1;
+            end 
+        end
+        % The row has been checked so no need to check it again
+        rows_already_matched(i) = 1;
+    end
+
+    % Remove zero entries and sort in descending order
+    v_ec(v_ec == 0) = [];
+    v_ec = sort(v_ec, 'descend');
+
 end

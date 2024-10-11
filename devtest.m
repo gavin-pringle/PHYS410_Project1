@@ -1,6 +1,6 @@
 close all; clear; clc;
 
-nc = 12;
+nc = 13;
 % Generate nc inital locations for charges
 r0 = zeros(nc, 3);
 for i = 1:nc
@@ -8,10 +8,10 @@ for i = 1:nc
     r0(i,:) = r0(i,:)/(norm(r0(i,:)));
 end
 
-tmax = 10;
+tmax = 20;
 gamma = 1;
-epsec = 1.0e-5;
-level = 10;
+epsec = 1.0e-4;
+level = 8;
 
 [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec);
 
