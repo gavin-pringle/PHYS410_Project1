@@ -1,3 +1,5 @@
+%% FOR CODE DEVELOPMENT ONLY - Test script for charges.m
+
 close all; clear; clc;
 
 nc = 24;
