@@ -56,8 +56,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Introduction}
 
-% Description of problem
-In this project, the problem of 
+In this project, the problem of N identical point charges confined to free motion on the surface of a 
+sphere is examined. Via a finite-difference approximation simulation, the dynamic behaviour of point 
+charges each originating from random initial positions on the surface of the sphere is computed. 
+Since like charges repel, if a velocity-dependent retarding force is present for each charge then it 
+follows that all charges will eventually reach a stable equilibrium where the electrostatic potential
+energy is minimized. 
+ 
+Through examining the potential energy of these equilibrium configurations as well as conducting 
+equivalence class analysis, the equilibrium configurations of the charges are cataloged and their
+symmetry is characterized. The equilibrium configurations in this problem are described in detail 
+in the \href{https://en.wikipedia.org/wiki/Thomson_problem}{Thomson problem}.
+
+In order to test the validity of the numerical model constructed for this problem, convergence testing 
+is also applied. This is done by simulating an identical scenario using multiple discretization levels,
+and analyzing the level-to-level differences. This convergence testing allows us to determine to which
+order our finite difference approximation is accurate.
 
 \pagebreak
 
