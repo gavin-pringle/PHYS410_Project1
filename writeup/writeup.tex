@@ -56,7 +56,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Introduction}
 
-In this project, the problem of N identical point charges confined to free motion on the surface of a 
+In this project, the problem of $N$ identical point charges confined to free motion on the surface of a 
 sphere is examined. Via a finite-difference approximation simulation, the dynamic behaviour of point 
 charges each originating from random initial positions on the surface of the sphere is computed. 
 Since like charges repel, if a velocity-dependent retarding force is present for each charge then it 
@@ -82,13 +82,53 @@ order our finite difference approximation is accurate.
 
 \subsubsection*{Equations of motion}
 
+In this simulation, natural units are used for all variables. This allows equations to be simplified by
+setting all masses and charges as well as the radius of the confining sphere centered at the origin
+equal to 1: 
+$$m_i = 1, \quad q_i = 1, \quad R = 1$$
+Using Cartesian coordinates, the position of each charge is written as 
+$$\mathbf{r}_i(t) \equiv [x_i(t), y_i(t), z_i(t)] \quad , \quad i = 1, 2, \dots, N,$$
+where
+$$r_i \equiv |\mathbf{r}_i| \equiv \sqrt{x_i^2 + y_i^2 + z_i^2} = 1 \quad , \quad i = 1, 2, \dots, N.$$
+The separation vectors between charges can be computed using the following formulas:
+$$\mathbf{r}_{ij} = \mathbf{r}_j - \mathbf{r}_i \,$$
+$$r_{ij} = |\mathbf{r}_j - \mathbf{r}_i| \,$$
+$$\hat{r}_{ij} \equiv \frac{\mathbf{r}_j - \mathbf{r}_i}{r_{ij}} = \frac{\mathbf{r}_{ij}}{r_{ij}} \,.$$
+The variable $\gamma$ is used as the scaling parameter for the velocity-dependent retarding force. The 
+equation for Newton's second law can then be written for each charge as:
+$$m_i a_i = F_{i, \textrm{electrostatic}} + F_{i, \textrm{retarding}}$$
+which can be expanded to 
+$$m_i \mathbf{a}_i=-k_e \sum_{j=1, j \neq i}^N \frac{q_i q_j}{r_{i j}} 
+\hat{\mathbf{r}}_{i j}-\gamma \mathbf{v}_i, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.$$
+Using natural units ($k_e=1$) and writing $\mathbf{a}_i$ and $\mathbf{v}_i$ as derivatives of $\mathbf{r}_i$, 
+this expression can be simplified to 
+$$\frac{d^2 \mathbf{r}_i}{d t^2}=-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}-\gamma 
+\frac{d \mathbf{r}_i}{d t}, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.$$
+The above equation is what is used to numerically solve the equations of motion using FDAs. 
+
 \subsubsection*{Electrostatic Potential Energy}
 
-% We expect the potential to reach a minimum at equilibrium
+The electrostatic potential energy of a point charge distribution is given by the following formula:
+$$W=k_e \sum_{i=1}^N \sum_{j>i}^N \frac{q_i q_j}{r_{i j}}$$
+Writing this potential energy in natural units and as a function of time, we can rewrite the above 
+equation as:
+$$V(t)=\sum_{i=2}^N \sum_{j=1}^{i-1} \frac{1}{r_{i j}}$$
+Since in our scenario energy is not conserved (kinetic energy is dissipated via the velocity-dependent
+retarding force), we expect the potential to trend towards a minimum as $t \rightarrow \infty$.
 
 \subsubsection*{Equivalence Classes}
 
-\pagebreak
+The concept of \textit{equivalence classes} is introduced in order to characterize the different
+equilibrium configurations of the point charges on the unit sphere. As $t \rightarrow \infty$ and 
+$V$ is minimized, the equilibrium configuration for $N$ charges becomes independent of the initial
+conditions. In words, the number of equivalence classes is the number of groups of charges that are 
+indistinguishable in the equilibrium configuration. 
+
+In order to calculate the number of equivalence classes, the magnitude of the displacement vector 
+from charge $i$ to charge $j$ is defined as 
+$$d_{i j}=\left|\mathbf{r}_j-\mathbf{r}_i\right| \quad i, j=1,2, \ldots, N$$
+For charges $i$ and $i'$ in the same equivalence class, the lists of magnitudes $d_{i j}$ and 
+$d_{i' j}$ to every other charge $j$ are the same.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Numerical approach
@@ -101,8 +141,6 @@ order our finite difference approximation is accurate.
 
 \subsubsection*{Convergence Testing}
 
-
-\pagebreak
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation
@@ -117,7 +155,6 @@ order our finite difference approximation is accurate.
 
 % Describe each of convtest.m, plotv.m, survey.m
 
-\pagebreak
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Results
