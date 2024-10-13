@@ -1,3 +1,5 @@
+%% 6.3 Survey of V(t_max; N) and v_ec(N) for various values of N
+
 close all; clear; clc;
 
 tmax = 500;

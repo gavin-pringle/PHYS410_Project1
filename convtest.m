@@ -1,3 +1,5 @@
+%% 6.1 - 4-level convergence test
+
 close all; clear; clc;
 
 % Simulation parameters as described in project description

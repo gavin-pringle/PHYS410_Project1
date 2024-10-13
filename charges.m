@@ -1,3 +1,5 @@
+%% 5.2 - Top-level function for simulation
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % charges: Top-level function for solution of charges-on-a-sphere
 % problem.

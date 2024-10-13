@@ -1,3 +1,5 @@
+%% 6.2 - Time evolution of potential for 12-charge calculation
+
 close all; clear; clc;
 
 % Simulation parameters
