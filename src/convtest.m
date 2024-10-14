@@ -39,7 +39,7 @@ plot(t12, rho^2*dx12, 'LineWidth', 2);
 xlabel("Time");
 ylabel("Difference between level");
 legend('dx10', 'rho * dx11', 'rho^2 * dx12');
-title("Convergence test: rho = 2");
+title("Convergence Test: rho = 2");
 ax = gca;
 ax.FontSize = 12;
 
@@ -53,6 +53,6 @@ plot(t12, rho^2*dx12, 'LineWidth', 2);
 xlabel("Time");
 ylabel("Difference between level");
 legend('dx10', 'rho * dx11', 'rho^2 * dx12');
-title("Convergence test: rho = 4");
+title("Convergence Test: rho = 4");
 ax = gca;
 ax.FontSize = 12;

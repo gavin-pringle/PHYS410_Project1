@@ -229,19 +229,40 @@ accuracy and therefore we expect to convergence of curves as described by (\ref{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Implementation}
 
-% Refer to appendix for finite difference and potential part of charges.m code 
+Refer to Appendix A for the full source code implementation of the simulation, including the finite-
+difference approximation, electrostatic potential computation, and equivalence class computation.  
 
-% Equivalence classes code description
+In order to generate random initial positions of charges for code development as well as in 
+\code{plotv.m} and \code{survey.m}, x, y and z coordinates for each charge are first chosen at random
+locations on $[-1,1]$. For each charge, its initial position vector $\mathbf{r}_i^0$ is then 
+re-normalized after by dividing it by its magnitude. This is shown in the code snippet below:
+\begin{verbatim}
+% Generate nc random inital locations for charges
+r0 = 2*rand(nc,3) - 1;
+for i = 1:nc
+    r0(i,:) = r0(i,:)/(norm(r0(i,:)));
+end
+\end{verbatim}
 
-% initial random locations of charges
+The equivalence classes are computed in the suggested way described in the project outline. First, a 
+matrix \code{dij} is generated which for each index \code{(i, j)} holds the magnitude of the vector from 
+$\mathbf{r}_i^{n_t}$ to $\mathbf{r}_j^{n_t}$. This is implemented in MATLAB via the line 
+\code{dij(i, j) = norm(r(j,:,nt) - r(i,:,nt))} placed inside a nested for loop. Each row of this matrix is 
+then sorted in ascending order, which is interpreted as the list of distances from charge $i$ to each other
+charge sorted in ascending order. In order to find which charges have matching rows (meaning they are in 
+the same equivalence class), a nested for loop is used that compares each row to each other row in 
+\code{dij}, while keeping track of which rows have already been placed into an equivalence class and how 
+many rows (or charges) are in each equivalence class. Refer to Appendix A for the full source code. 
 
-% Describe each of convtest.m, plotv.m, survey.m
-
+Please refer to Appendices B, C, and D for the source code for \code{convtest.m}, \code{plotv.m}, and
+\code{survey.m}, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Results}
+
+Through gradual development of 
 
 \subsubsection*{convtest.m output}
 
@@ -250,6 +271,8 @@ accuracy and therefore we expect to convergence of curves as described by (\ref{
 \subsubsection*{survey.m output}
 
 \subsubsection*{Video of sample evolution}
+
+The attached file \code{charges.mp4}
 
 \pagebreak
 
