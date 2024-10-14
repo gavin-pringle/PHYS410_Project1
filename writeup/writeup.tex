@@ -102,8 +102,10 @@ $$m_i \mathbf{a}_i=-k_e \sum_{j=1, j \neq i}^N \frac{q_i q_j}{r_{i j}}
 \hat{\mathbf{r}}_{i j}-\gamma \mathbf{v}_i, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.$$
 Using natural units ($k_e=1$) and writing $\mathbf{a}_i$ and $\mathbf{v}_i$ as derivatives of $\mathbf{r}_i$, 
 this expression can be simplified to 
-$$\frac{d^2 \mathbf{r}_i}{d t^2}=-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}-\gamma 
-\frac{d \mathbf{r}_i}{d t}, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.$$
+\begin{equation}\label{EOM}
+\frac{d^2 \mathbf{r}_i}{d t^2}=-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}-\gamma 
+\frac{d \mathbf{r}_i}{d t}, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.
+\end{equation}
 The above equation is what is used to numerically solve the equations of motion using FDAs. 
 
 \subsubsection*{Electrostatic Potential Energy}
@@ -112,7 +114,9 @@ The electrostatic potential energy of a point charge distribution is given by th
 $$W=k_e \sum_{i=1}^N \sum_{j>i}^N \frac{q_i q_j}{r_{i j}}$$
 Writing this potential energy in natural units and as a function of time, we can rewrite the above 
 equation as:
-$$V(t)=\sum_{i=2}^N \sum_{j=1}^{i-1} \frac{1}{r_{i j}}$$
+\begin{equation}\label{potential}
+V(t)=\sum_{i=2}^N \sum_{j=1}^{i-1} \frac{1}{r_{i j}}
+\end{equation}
 Since in our scenario energy is not conserved (kinetic energy is dissipated via the velocity-dependent
 retarding force), we expect the potential to trend towards a minimum as $t \rightarrow \infty$.
 
@@ -137,7 +141,53 @@ $d_{i' j}$ to every other charge $j$ are the same.
 
 \subsubsection*{Finite Difference Equations}
 
-% Include normalization of positions 
+For this assignment, the following second-order accurate FDAs are used for the first and second vector
+time derivatives: 
+\begin{equation}\label{first_derivative}
+\left.\frac{d \mathbf{r}_i}{d t}\right|_{t=t^n} 
+\rightarrow \frac{\mathbf{r}_i^{n+1}-\mathbf{r}_i^{n-1}}{2 \Delta t}
+\end{equation}
+\begin{equation}\label{second_derivative}
+\left.\frac{d^2 \mathbf{r}_i}{d t^2}\right|_{t=t^n} 
+\rightarrow \frac{\mathbf{r}_i^{n+1}-2 \mathbf{r}_i^n+\mathbf{r}_i^{n-1}}{\Delta t^2}
+\end{equation}
+with $t^n$ and $\Delta t$ defined as 
+$$ \textrm{Total number of time steps:} \quad n_t=2^{\ell}+1 $$
+$$ \textrm{Time step length:} \quad \Delta t=\frac{t_{\max }}{n_t-1}=2^{-\ell} t_{\max } $$
+$$ \textrm{Time at time step } n: \quad t^n=(n-1) \Delta t, \quad n=1,2, \ldots n_t $$
+Plugging (\ref{first_derivative}) and (\ref{second_derivative}) into (\ref{EOM}), we can create a new
+FDA for the equations of motion (evaluated at time $t^n$):
+$$ \frac{\mathbf{r}_i^{n+1}-2 \mathbf{r}_i^n+\mathbf{r}_i^{n-1}}{\Delta t^2} 
+=\left.-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}\right|_{t=t^n}-
+\gamma \frac{\mathbf{r}_i^{n+1}-\mathbf{r}_i^{n-1}}{2 \Delta t} $$
+This equation can be reorganized to produce a formula for $\mathbf{r}_i^{n+1}$, the next position vector
+following $\mathbf{r}_i^n$:
+$$ \mathbf{r}_i^{n+1} = \left( \frac{1}{\Delta t^2} + \frac{\gamma}{2\Delta t} \right)^{-1} 
+\left( \left( \frac{\gamma}{2\Delta t} - \frac{1}{\Delta t^2} \right) \mathbf{r}_i^{n-1} +
+\frac{2}{\Delta t^2} \mathbf{r}_i^n \left.-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}
+\right|_{t=t^n} \right) $$
+In this implementation, the current time step $n$ is treated as the time step to be calculated, 
+producing the following equation which is implemented in code:
+\begin{equation}\label{FDA}
+\mathbf{r}_i^{n} = \left( \frac{1}{\Delta t^2} + \frac{\gamma}{2\Delta t} \right)^{-1} 
+\left( \left( \frac{\gamma}{2\Delta t} - \frac{1}{\Delta t^2} \right) \mathbf{r}_i^{n-2} +
+\frac{2}{\Delta t^2} \mathbf{r}_i^{n-1} \left.-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}
+\right|_{n-1} \right) 
+\end{equation}
+
+Since this FDA is a vector equation, it is evaluated three times for each charge at every time step for
+each of the three Cartesian coordinate directions. Luckily, MATLAB syntax allows a vector equation such
+as this one to be computed simultaneously for each coordinate. 
+
+Additionally, since this FDA does not constrain charges to be on the unit sphere, each charge is 
+re-normalized after by dividing its position by its magnitude:
+\begin{equation}\label{normalization}
+\tilde{\mathbf{r}}_i^n \rightarrow \frac{\tilde{\mathbf{r}}_i^n}{\left|\tilde{\mathbf{r}}_i^n
+\right|}=\frac{\left[\tilde{x}_i^n, \tilde{y}_i^n, \tilde{z}^n\right]}{\sqrt{\left(\tilde{x}_i^n
+\right)^2+\left(\tilde{y}_i^n\right)^2+\left(\tilde{z}_i^n\right)^2}}
+\end{equation}
+This normalization assumes that the distance the FDA (\ref{FDA}) moves each charge radially off the 
+unit sphere is negligible.
 
 \subsubsection*{Convergence Testing}
 
@@ -176,6 +226,7 @@ $d_{i' j}$ to every other charge $j$ are the same.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Conclusions}
 
+% runtime shortcomings 
 
 \pagebreak
 
