@@ -100,8 +100,8 @@ $$m_i a_i = F_{i, \textrm{electrostatic}} + F_{i, \textrm{retarding}}$$
 which can be expanded to 
 $$m_i \mathbf{a}_i=-k_e \sum_{j=1, j \neq i}^N \frac{q_i q_j}{r_{i j}} 
 \hat{\mathbf{r}}_{i j}-\gamma \mathbf{v}_i, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.$$
-Using natural units ($k_e=1$) and writing $\mathbf{a}_i$ and $\mathbf{v}_i$ as derivatives of $\mathbf{r}_i$, 
-this expression can be simplified to 
+Using natural units ($k_e=1$) and writing $\mathbf{a}_i$ and $\mathbf{v}_i$ as derivatives of 
+$\mathbf{r}_i$, this expression can be simplified to 
 \begin{equation}\label{EOM}
 \frac{d^2 \mathbf{r}_i}{d t^2}=-\sum_{j=1, j \neq i}^N \frac{\mathbf{r}_{i j}}{r_{i j}{ }^3}-\gamma 
 \frac{d \mathbf{r}_i}{d t}, \quad i=1,2, \ldots N, \quad 0 \leq t \leq t_{\max }.
@@ -182,15 +182,47 @@ as this one to be computed simultaneously for each coordinate.
 Additionally, since this FDA does not constrain charges to be on the unit sphere, each charge is 
 re-normalized after by dividing its position by its magnitude:
 \begin{equation}\label{normalization}
-\tilde{\mathbf{r}}_i^n \rightarrow \frac{\tilde{\mathbf{r}}_i^n}{\left|\tilde{\mathbf{r}}_i^n
-\right|}=\frac{\left[\tilde{x}_i^n, \tilde{y}_i^n, \tilde{z}^n\right]}{\sqrt{\left(\tilde{x}_i^n
-\right)^2+\left(\tilde{y}_i^n\right)^2+\left(\tilde{z}_i^n\right)^2}}
+\tilde{\mathbf{r}}_i^n \rightarrow \frac{\mathbf{r}_i^n}{\left|\mathbf{r}_i^n \right|}=
+\frac{\left[x_i^n, y_i^n, z^n\right]}
+{\sqrt{\left(x_i^n\right)^2+\left(y_i^n\right)^2+\left(z_i^n\right)^2}}
 \end{equation}
 This normalization assumes that the distance the FDA (\ref{FDA}) moves each charge radially off the 
 unit sphere is negligible.
 
 \subsubsection*{Convergence Testing}
 
+The validity of the FDA computed can be evaluated by conducting convergence analysis. Convergence 
+analysis assumes that the error between the true solution and the computed solution is given by a 
+\textit{function} $e_2(t^n)$ scaled by the time-step duration:
+$$ \lim_{\Delta t\to 0} u_*(t^n) - u(t^n) \approx \Delta t e_2(t^n) 
+\quad , \quad \textrm{If the approximation is first order}$$
+$$ \lim_{\Delta t\to 0} u_*(t^n) - u(t^n) \approx \Delta t^2 e_2(t^n) 
+\quad , \quad \textrm{If the approximation is second order}$$
+where $u_*(t^n)$ is the true solution at each time step and $u(t^n)$ is the computed solution at 
+each time step. 
+
+Convergence analysis is done by computing the FDA for each time-step at different discretization levels 
+$l$ and comparing the results. For a first order approximation this looks like 
+$$du_l = u_l(t^n)-u_{l+1}(t^n) \approx -\frac{1}{2} \Delta t_l e_2(t^n)$$
+$$du_{l+1} = u_{l+1}(t^n)-u_{l+2}(t^n) \approx -\frac{1}{4} \Delta t_l e_2(t^n)$$
+For a second order approximation this looks like 
+$$du_l = u_l(t^n)-u_{l+1}(t^n) \approx -\frac{3}{4} \Delta t_l^2 e_2(t^n)$$
+$$du_{l+1} = u_{l+1}(t^n)-u_{l+2}(t^n) \approx -\frac{3}{16} \Delta t_l^2 e_2(t^n)$$
+Therefore, for a first order approximation we expect to have 
+\begin{equation}\label{first_order}
+du_{l+1} \approx \frac{du_l}{2^1} , \quad du_{l+2} \approx \frac{du_l}{2^2} ,
+\quad du_{l+3} \approx \frac{du_l}{2^3} , \quad \ldots
+\end{equation}
+and for a second order approximation we expect to have 
+\begin{equation}\label{second_order}
+du_{l+1} \approx \frac{du_l}{4^1} , \quad du_{l+2} \approx \frac{du_l}{4^2} , 
+\quad du_{l+3} \approx \frac{du_l}{4^3} , \quad \ldots
+\end{equation}
+
+In our implementation we are using second order FDA to compute both the first and second time 
+derivatives of position so the per-step error is second order. However, since the number of steps to
+get to $t_{max}$ varies like $\frac{1}{\Delta t}$, we expect the overall simulation to have first order
+accuracy and therefore we expect to convergence of curves as described by (\ref{first_order}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Implementation

@@ -24,7 +24,7 @@ x12 = reshape(r12(1,1,:), size(t12));
 x13 = reshape(r13(1,1,:), size(t13)); 
 
 % Calculating the level-to-level differences, taking every second 
-% value of the larger lenght array
+% value of the larger length array
 dx10 = downsample(x11, 2) - x10; 
 dx11 = downsample(x12, 2) - x11; 
 dx12 = downsample(x13, 2) - x12;
@@ -38,7 +38,7 @@ plot(t11, rho*dx11, 'LineWidth', 2);
 plot(t12, rho^2*dx12, 'LineWidth', 2);
 xlabel("Time");
 ylabel("Difference between level");
-legend('dx10', 'rho*dx11', 'rho^2*dx12');
+legend('dx10', 'rho * dx11', 'rho^2 * dx12');
 title("Convergence test: rho = 2");
 ax = gca;
 ax.FontSize = 12;
@@ -52,7 +52,7 @@ plot(t11, rho*dx11, 'LineWidth', 2);
 plot(t12, rho^2*dx12, 'LineWidth', 2);
 xlabel("Time");
 ylabel("Difference between level");
-legend('dx10', 'rho*dx11', 'rho^2*dx12');
+legend('dx10', 'rho * dx11', 'rho^2 * dx12');
 title("Convergence test: rho = 4");
 ax = gca;
 ax.FontSize = 12;
