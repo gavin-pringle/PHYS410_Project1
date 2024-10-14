@@ -18,11 +18,13 @@
 \definecolor{mylilas}{RGB}{170,55,241}
 
 \usepackage{graphicx}
-\graphicspath{{../writeup/}}
+\graphicspath{{../output/}}
 
 \def\code#1{\texttt{#1}}
 
-\usepackage[colorlinks=true, urlcolor=blue, linkcolor=red]{hyperref}
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=blue]{hyperref}
+
+\usepackage{verbatim}
 
 \title{PHYS 410 Project 1}
 \author{Gavin Pringle, 56401938}
@@ -266,9 +268,30 @@ Through gradual development of
 
 \subsubsection*{convtest.m output}
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{ConvTest_2.png}
+\caption{First order convergence test}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{ConvTest_4.png}
+\caption{Second order convergence test}
+\end{figure}
+
 \subsubsection*{plotv.m output}
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.75\textwidth]{plotv_output.png}
+\caption{Output of \code{plotv.m} - electrostatic potential energy vs. time}
+\end{figure}
+
 \subsubsection*{survey.m output}
+
+\verbatiminput{../output/vsurvey_GP.dat}
+\verbatiminput{../output/ecsurvey_GP.dat}
 
 \subsubsection*{Video of sample evolution}
 
