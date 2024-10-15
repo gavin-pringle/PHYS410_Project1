@@ -20,11 +20,12 @@
 \usepackage{graphicx}
 \graphicspath{{../output/}}
 
-\def\code#1{\texttt{#1}}
+\def\code#1{\texttt{#1}} % Monospacing shortcut: Use \code{}
 
 \usepackage[colorlinks=true, urlcolor=blue, linkcolor=blue]{hyperref}
 
-\usepackage{verbatim}
+\usepackage{verbatim} % For including raw text files in the pdf
+\usepackage{float} % For keeping figures in the section where they were called 
 
 \title{PHYS 410 Project 1}
 \author{Gavin Pringle, 56401938}
@@ -252,9 +253,10 @@ $\mathbf{r}_i^{n_t}$ to $\mathbf{r}_j^{n_t}$. This is implemented in MATLAB via 
 \code{dij(i, j) = norm(r(j,:,nt) - r(i,:,nt))} placed inside a nested for loop. Each row of this matrix is 
 then sorted in ascending order, which is interpreted as the list of distances from charge $i$ to each other
 charge sorted in ascending order. In order to find which charges have matching rows (meaning they are in 
-the same equivalence class), a nested for loop is used that compares each row to each other row in 
-\code{dij}, while keeping track of which rows have already been placed into an equivalence class and how 
-many rows (or charges) are in each equivalence class. Refer to Appendix A for the full source code. 
+the same equivalence class), a nested for loop is used that compares each row to each other row in \code{dij}
+element-by-element to a tolerance of \code{epsec}, while keeping track of which rows have 
+already been placed into an equivalence class and how many rows (or charges) are in each equivalence class. 
+Refer to Appendix A for the full source code. 
 
 Please refer to Appendices B, C, and D for the source code for \code{convtest.m}, \code{plotv.m}, and
 \code{survey.m}, respectively.
@@ -264,17 +266,28 @@ Please refer to Appendices B, C, and D for the source code for \code{convtest.m}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Results}
 
-Through gradual development of 
+Through frequent use of the provided plotting scripts \code{charges\_plot.m} and \code{charges\_video.m}, 
+the top-level function \code{charges.m} was developed until it was clear it was working correctly. 
+Furthermore, the required test scripts described below produced output data that agreed with the expected
+behaviour of the simulation. 
 
 \subsubsection*{convtest.m output}
 
-\begin{figure}[ht!]
+Figures 1 and 2 below show the output of the script \code{convtest.m}, which conducts convergence analysis
+of the x-coordinate of the first charge throughout the simulation time across different discretization 
+levels: $l=10, 11, 12, 13$. The convergence analysis was conducted with the input parameters as described 
+in the project outline document and in Appendix B. 
+
+From the plots, we can see near-coincidence of the curves for $\rho=2$ and discrepancy between the curves 
+for $\rho=4$
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{ConvTest_2.png}
 \caption{First order convergence test}
 \end{figure}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{ConvTest_4.png}
 \caption{Second order convergence test}
@@ -282,7 +295,7 @@ Through gradual development of
 
 \subsubsection*{plotv.m output}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{plotv_output.png}
 \caption{Output of \code{plotv.m} - electrostatic potential energy vs. time}
@@ -304,7 +317,14 @@ The attached file \code{charges.mp4}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Conclusions}
 
+% Summarize findings 
+
 % runtime shortcomings 
+
+% difficulty choosing tmax and level - unstable behaviour
+% Sensitivity of v_ec
+
+% AI statement 
 
 \pagebreak
 
