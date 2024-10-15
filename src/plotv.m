@@ -19,7 +19,7 @@ end
 [t, r, v, v_ec] = charges(r0, tmax, level, gamma, epsec);
 
 % Plot V(t) vs. t 
-plot(t,v)
+plot(t,v, 'LineWidth', 2)
 xlabel("Time t")
 ylabel("Total potential energy V(t)")
 title({"Potential Energy V(t) vs. time t", ...

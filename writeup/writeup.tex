@@ -76,8 +76,6 @@ is also applied. This is done by simulating an identical scenario using multiple
 and analyzing the level-to-level differences. This convergence testing allows us to determine to which
 order our finite difference approximation is accurate.
 
-\pagebreak
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Review of Theory
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -271,7 +269,7 @@ the top-level function \code{charges.m} was developed until it was clear it was 
 Furthermore, the required test scripts described below produced output data that agreed with the expected
 behaviour of the simulation. 
 
-\subsubsection*{convtest.m output}
+\subsubsection*{convtest.m Output}
 
 Figures 1 and 2 below show the output of the script \code{convtest.m}, which conducts convergence analysis
 of the x-coordinate of the first charge throughout the simulation time across different discretization 
@@ -279,7 +277,10 @@ levels: $l=10, 11, 12, 13$. The convergence analysis was conducted with the inpu
 in the project outline document and in Appendix B. 
 
 From the plots, we can see near-coincidence of the curves for $\rho=2$ and discrepancy between the curves 
-for $\rho=4$
+for $\rho=4$. This agrees with equation (\ref{first_order}), as predicted in the Numerical Analysis section. 
+Additionally, since we see that the plots produce smooth curves representing functions, and since these 
+curves become more coincident as the discretization level increases, we can be confident that the model is 
+accurate.
 
 \begin{figure}[H]
 \centering
@@ -293,7 +294,15 @@ for $\rho=4$
 \caption{Second order convergence test}
 \end{figure}
 
-\subsubsection*{plotv.m output}
+\subsubsection*{plotv.m Output}
+
+In Figure 3 below, the electrostatic potential energy of the initially random configuration of 12
+charges is shown as a function of time. We see that initially the potential is very high as no energy
+has been dissipated by the velocity-dependent retarding force, but decreases to a global minimum by 
+the end of the simulation time. For 12 charges, from the Wikipedia page on the 
+\href{https://en.wikipedia.org/wiki/Thomson_problem}{Thomson problem} we expect the equilibrium potential 
+energy to be 49.165253058 (in natural units). This agrees with the plot shown and verifies the configuration
+did not settle to a local minimum. 
 
 \begin{figure}[H]
 \centering
@@ -301,21 +310,54 @@ for $\rho=4$
 \caption{Output of \code{plotv.m} - electrostatic potential energy vs. time}
 \end{figure}
 
-\subsubsection*{survey.m output}
+\subsubsection*{survey.m Output}
 
+The raw output from the MATLAB script \code{survey.m} is shown below. This data was collected using
+the following input parameters:
+\begin{verbatim}
+tmax = 500;
+level = 12;
+gamma = 2;
+epsec = 1.0e-3;
+\end{verbatim}
+The output showing the equilibrium potential energy matches the Wikipedia page for each row to 
+acceptable tolerance. Additionally, the equivalence class output agrees with the tabulated 
+expected output on Wikipedia for most values of $N$ that are not "troublesome". 
+
+\textit{Please note that for the nc = 55,56,58,59 each charge is in its own equivalence class. 
+Formatting did not allow for all elements of} \code{v\_ec} \textit{to be displayed on one line.}
+
+\underline{Equilibrium Potential Energy:}
 \verbatiminput{../output/vsurvey_GP.dat}
+
+\underline{Equivalence Classes:}
 \verbatiminput{../output/ecsurvey_GP.dat}
 
-\subsubsection*{Video of sample evolution}
+\subsubsection*{Video of Sample Evolution}
 
-The attached file \code{charges.mp4}
-
-\pagebreak
+Please open attached file \code{charges.mp4} in order to see a video of the simulation of 24 charges 
+using the following input parameters:
+\begin{verbatim}
+tmax = 10;
+level = 9;
+gamma = 2;
+epsec = 1.0e-3;
+\end{verbatim}
+For this video, the following code was also used in order to generate random initial positions of charges
+that are closer together for a more dynamic simulation:
+\begin{verbatim}
+r0 = rand(nc,3);
+for i = 1:nc
+    r0(i,:) = r0(i,:)/(norm(r0(i,:)));
+end
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Conclusions}
+
+In this project, a MATLAB function was created to simulate the 
 
 % Summarize findings 
 
@@ -324,7 +366,7 @@ The attached file \code{charges.mp4}
 % difficulty choosing tmax and level - unstable behaviour
 % Sensitivity of v_ec
 
-% AI statement 
+Generative AI was not used to complete this project. 
 
 \pagebreak
 
