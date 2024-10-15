@@ -328,14 +328,14 @@ expected output on Wikipedia for most values of $N$ that are not "troublesome".
 Formatting did not allow for all elements of} \code{v\_ec} \textit{to be displayed on one line.}
 
 \underline{Equilibrium Potential Energy:}
-\verbatiminput{../output/vsurvey_GP.dat}
+\verbatiminput{../output/vsurvey.dat}
 
 \underline{Equivalence Classes:}
-\verbatiminput{../output/ecsurvey_GP.dat}
+\verbatiminput{../output/ecsurvey.dat}
 
 \subsubsection*{Video of Sample Evolution}
 
-Please open attached file \code{charges.mp4} in order to see a video of the simulation of 24 charges 
+Please open attached file \code{charges\_GP.mp4} in order to see a video of the simulation of 24 charges 
 using the following input parameters:
 \begin{verbatim}
 tmax = 10;
@@ -357,14 +357,27 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Conclusions}
 
-In this project, a MATLAB function was created to simulate the 
+In this project, a MATLAB function was created to simulate the dynamic behaviour of charges repelling 
+each other on the surface of the unit sphere. For each time step, the electrostatic potential energy
+was calculated and the number of equivalence classes were also computed at the final time step. 
+Convergence testing was also completed in order to verify to what order the model was accurate, and it 
+was found as expected that the model was accurate to first order. Comparing the equilibrium potential 
+energy to reference values, we found or simulation was quite accurate, however multiple discrepancies 
+were present in the tabulated data for the equivalence classes compared to the computed equivalence 
+classes. 
 
-% Summarize findings 
+The runtime for \code{charges.m} was very lengthy and is not optimized in its current state. While it 
+produces accurate results, there still remain inefficiencies that need to be addresses. This was 
+notable when generating survey data in \code{survey.m}, which took multiple minutes to complete.
 
-% runtime shortcomings 
-
-% difficulty choosing tmax and level - unstable behaviour
-% Sensitivity of v_ec
+Some difficulty was also encountered when choosing simulation input parameters. When a large $t_{max}$
+was chosen without also increasing the discretization level to match it, the duration of time steps 
+$\Delta t$ became quite large, leading to unstable behaviour in the simulation. This resulted in a 
+plot of the potential energy as a function of time that was not smooth and did not settle to an 
+equilibrium value. Additionally, the equivalence class parameter \code{epsec} was quite sensitive
+and the equivalence class analysis often produced incorrect results unless \code{epsec} was increased 
+to a large value. For some values of $N$ such as 13, the number of equivalence classes was very 
+sensitive and often provided a different result even with the same input parameters.
 
 Generative AI was not used to complete this project. 
 
